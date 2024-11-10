@@ -1,0 +1,10 @@
+.bg-img{
+    background-image: url('./assets/image/bg2.png');
+    /* background-size:cover; */
+    background-repeat: no-repeat; 
+    /* background-position: fit; */
+   object-fit: contain;
+   /* display: flex;
+   justify-items: right; */
+ /* z-index: ; */
+}

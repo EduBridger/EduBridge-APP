@@ -1,16 +1,25 @@
-import { useState } from 'react'
+import React from "react";
 
-import './App.css'
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import About from "./pages/about/About";
+import Offers from "./components/Offers";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <About />,
+    },
+    {
+      path: "/",
+      element: <Offers/>,
+    },
+  ]);
 
-  return (
-   <div>
-    
-   </div>
-       
-  )
+  return <RouterProvider router  = {router}/>
+ 
 }
 
-export default App
+export default App;
