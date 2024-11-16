@@ -16,6 +16,7 @@ function App() {
       path: "/",
       element: <Offers/>,
     },
+   
   ]);
 
   return <RouterProvider router  = {router}/>

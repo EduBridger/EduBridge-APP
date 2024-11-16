@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <div className="flex  ">
 <div>
-<img src={heroimg} alt="" srcset={`${heroimg} 1x, ${heroimg} 2x`}/>
+<img className='object-contain' src={heroimg} alt="" srcset=""/>
 </div>
 <div>
 hero goes here
