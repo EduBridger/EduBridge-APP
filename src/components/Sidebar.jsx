@@ -1,60 +1,60 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+// import React from 'react'
+// import { Link } from 'react-router-dom'
 
-const Sidebar = () => {
-  return (
-    <div className="w-[20%] h-screen p-4 bg-gray-200 fixed">
-      <h2 className="font-bold text-xl mb-6">Dashboard</h2>
-      <ul>
-        <li className="mb-4">
-          <button
-            className='w-full p-2  bg-green-500 text-white '
-            onClick={() => handleViewChange('overview')}
-          >
-            Dashboard Overview
-          </button>
-        </li>
-        <li className="mb-4">
-          <Link to="/myads">
-          <button
-             className='w-full p-2  bg-green-500 text-white '
-            onClick={() => handleViewChange('myAds')}
-          >
-            My Ads
-          </button>
-          </Link>
+// const Sidebar = () => {
+//   return (
+//     <div className="w-[20%] h-screen p-4 bg-gray-200 fixed">
+//       <h2 className="font-bold text-xl mb-6">Dashboard</h2>
+//       <ul>
+//         <li className="mb-4">
+//           <button
+//             className='w-full p-2  bg-green-500 text-white '
+//             onClick={() => handleViewChange('overview')}
+//           >
+//             Dashboard Overview
+//           </button>
+//         </li>
+//         <li className="mb-4">
+//           <Link to="/myads">
+//           <button
+//              className='w-full p-2  bg-green-500 text-white '
+//             onClick={() => handleViewChange('myAds')}
+//           >
+//             My Ads
+//           </button>
+//           </Link>
          
-        </li>
-        <li className="mb-4">
-          <button
-             className='w-full p-2  bg-green-500 text-white '
-            onClick={() => handleViewChange('home')}
-          >
-            Home
-          </button>
-        </li>
-        <li className="mb-4">
-          <Link to="/post-ad">
-          <button
-             className='w-full p-2  bg-green-500 text-white '
-            onClick={() => handleViewChange('postAd')}
-          >
-            Post an Ad
-          </button>
-          </Link>
+//         </li>
+//         <li className="mb-4">
+//           <button
+//              className='w-full p-2  bg-green-500 text-white '
+//             onClick={() => handleViewChange('home')}
+//           >
+//             Home
+//           </button>
+//         </li>
+//         <li className="mb-4">
+//           <Link to="/post-ad">
+//           <button
+//              className='w-full p-2  bg-green-500 text-white '
+//             onClick={() => handleViewChange('postAd')}
+//           >
+//             Post an Ad
+//           </button>
+//           </Link>
           
-        </li>
-        <li className="mb-4">
+//         </li>
+//         <li className="mb-4">
           
-          <button className="w-full p-2 bg-red-500 text-white">Logout</button>
-        </li>
-      </ul>
-    </div>
+//           <button className="w-full p-2 bg-red-500 text-white">Logout</button>
+//         </li>
+//       </ul>
+//     </div>
 
-  )
-}
+//   )
+// }
 
-export default Sidebar
+// export default Sidebar
 
     
 {/*     
@@ -82,3 +82,40 @@ export default Sidebar
    
     
  
+      import React from 'react';
+      import { Link, useLocation } from 'react-router-dom';
+      import logo from "../assets/image/logo.png";
+      const Sidebar = ({ links }) => {
+        const location = useLocation();
+      
+        return (
+          <div className="w-64 bg-[rgba(8,42,88,0.9)] text-white h-screen fixed">
+            {/* <div className="p-4 text-2xl font-bold border-b border-gray-700">
+              EduBridge
+            </div> */}
+             <div className="flex justify-center mt-5">
+        <img
+          className="font-bold  rounded-full border-2   w-24 h-24 text-2xl  flex items-center justify-center"
+          src={logo}
+          alt=""
+        />
+      </div>
+            <nav className="p-4">
+              {links.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`block py-2 px-4 rounded ${
+                    location.pathname === link.path ? 'bg-yellow-500' : 'hover:bg-yellow-500'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        );
+      };
+      
+      export default Sidebar;
+      
