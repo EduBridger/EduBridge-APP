@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import About from "./pages/about/About";
 import Offers from "./components/Offers";
 import Login from "./pages/forms/Login";
-import SignUp from "./pages/forms/Signup";
+import SignUp from "./pages/forms/RegisterUser";
 import AdminDashboard from "./components/AdminDasshboard";
 import TeacherDashboard from "./components/TeacherDashboard";
 import StudentDashboard from "./components/StudentDashboard";
@@ -16,6 +16,13 @@ import StudentAssignments from "./components/StudentAssignments";
 import StudentMaterials from "./components/StudentMaterials";
 import StudentGoals from "./components/StudentGoals";
 import ErrorBoundary from "./components/ErrorBoundary";
+import RegisterUser from "./pages/forms/RegisterUser";
+import AdminSignUpForm from "./pages/forms/AdminSignUpForm";
+import AdminLoginForm from "./pages/forms/AdminLoginForm";
+import UserRegistrationForm from "./pages/forms/UserRrgistrationForm";
+import Sidebar from "./components/Sidebar";
+import TeacherLoginForm from "./pages/forms/TeacherLoginForm";
+import StudentLoginForm from "./pages/forms/StudentLoginForm";
 
 
   const router = createBrowserRouter([
@@ -28,8 +35,20 @@ import ErrorBoundary from "./components/ErrorBoundary";
       element: <Offers />,
     },
     {
-      path: "/login",
-      element: <Login />,
+      path: "/teacher-login",
+      element: <TeacherLoginForm />,
+    },
+    {
+      path: "/student-login",
+      element: <StudentLoginForm />,
+    },
+    {
+      path: "/admin-signup",
+      element: <AdminSignUpForm />,
+    },
+    {
+      path: "/admin-login",
+      element: <AdminLoginForm />,
     },
 
     {
@@ -37,8 +56,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
       element: <AdminDashboard />,
       children: [
         {
-          path: "register",
-          element: <SignUp />,
+          path: "register-user",
+          element: <UserRegistrationForm/>,
         },
       ],
     },

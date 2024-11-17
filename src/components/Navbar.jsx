@@ -36,7 +36,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center space-x-4">
+        {/* <div className="hidden md:flex items-center space-x-4">
         <Link to="/login"
           className="bg-[#FFC820]  text-white text-center font-medium text-md p-2 rounded-md"
         >
@@ -48,7 +48,7 @@ const Navbar = () => {
         >
           JOIN
         </Link>
-      </div>
+      </div> */}
 
         <button onClick={toggleMenu} className="md:hidden p-2">
           ☰

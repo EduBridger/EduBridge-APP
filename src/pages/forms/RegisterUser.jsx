@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const SignUp = () => {
+const RegisterUser = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -14,7 +14,7 @@ const SignUp = () => {
       setLoading(true);
       //prepare data to be sent to backend
 
-      const formData = new FormData(event.target); //helping to get data from the form(signup form)
+      const formData = new FormData(event.target); //helping to get data from the form(RegisterUser form)
       const firstName = formData.get("firstName");
       const middleName = formData.get("middleName");
       const lastName = formData.get("lastName");
@@ -38,7 +38,7 @@ const SignUp = () => {
         // role: "vendor",
       };
 
-      const response = await apiSignUp(payload);
+      const response = await apiRegisterUser(payload);
       console.log(response.data);
 
       //show a success notification
@@ -138,21 +138,21 @@ const SignUp = () => {
             type="submit"
             className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-900 transition duration-200"
           >
-            SignUp
+            RegisterUser
           </button>
 
           {/* <button
               type="submit"
               className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-900 transition duration-200"
             >
-             {loading ? "loading...." "SignUp"} 
+             {loading ? "loading...." "RegisterUser"} 
             </button> */}
           </Link>
         </form>
 
         {/* <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            By clicking Signup Now, you agree to our 
+            By clicking RegisterUser Now, you agree to our 
             <a href="#" className="text-green-500 hover:underline"> Terms</a> and 
             <a href="#" className="text-green-500 hover:underline"> Privacy Policy</a>.
           </p>
@@ -162,4 +162,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default RegisterUser;

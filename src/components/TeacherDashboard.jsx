@@ -1,12 +1,12 @@
-import React from 'react';
-import Sidebar from './Sidebar';
+import React from "react";
+import Sidebar from "./Sidebar1";
 
 const TeacherDashboard = () => {
   const links = [
-    { label: 'Assignments', path: '/teacher/assignments' },
-    { label: 'Attendance', path: '/teacher/attendance' },
-    { label: 'Grades', path: '/teacher/grades' },
-    { label: 'Messages', path: '/teacher/messages' },
+    { label: "Assignments", path: "/teacher/assignments" },
+    { label: "Attendance", path: "/teacher/attendance" },
+    { label: "Grades", path: "/teacher/grades" },
+    { label: "Messages", path: "/teacher/messages" },
   ];
 
   return (

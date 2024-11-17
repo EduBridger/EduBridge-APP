@@ -1,12 +1,12 @@
-import React from 'react';
-import Sidebar from './Sidebar';
+import React from "react";
+import Sidebar from "./Sidebar1";
 
 const StudentDashboard = () => {
   const links = [
-    { label: 'Assignments', path: '/student/assignments' },
-    { label: 'Course Materials', path: '/student/materials' },
-    { label: 'Goals', path: '/student/goals' },
-    { label: 'Messages', path: '/student/messages' },
+    { label: "Assignments", path: "/student/assignments" },
+    { label: "Course Materials", path: "/student/materials" },
+    { label: "Goals", path: "/student/goals" },
+    { label: "Messages", path: "/student/messages" },
   ];
 
   return (

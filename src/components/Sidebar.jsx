@@ -1,121 +1,124 @@
-// import React from 'react'
-// import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  FaProjectDiagram,
+  FaFileAlt,
+  FaFolderOpen,
+  FaGavel,
+  FaArchive,
+  FaCog,
+  FaChartLine,
+  FaQuestionCircle,
+  FaSearch,
+} from "react-icons/fa";
 
-// const Sidebar = () => {
-//   return (
-//     <div className="w-[20%] h-screen p-4 bg-gray-200 fixed">
-//       <h2 className="font-bold text-xl mb-6">Dashboard</h2>
-//       <ul>
-//         <li className="mb-4">
-//           <button
-//             className='w-full p-2  bg-green-500 text-white '
-//             onClick={() => handleViewChange('overview')}
-//           >
-//             Dashboard Overview
-//           </button>
-//         </li>
-//         <li className="mb-4">
-//           <Link to="/myads">
-//           <button
-//              className='w-full p-2  bg-green-500 text-white '
-//             onClick={() => handleViewChange('myAds')}
-//           >
-//             My Ads
-//           </button>
-//           </Link>
-         
-//         </li>
-//         <li className="mb-4">
-//           <button
-//              className='w-full p-2  bg-green-500 text-white '
-//             onClick={() => handleViewChange('home')}
-//           >
-//             Home
-//           </button>
-//         </li>
-//         <li className="mb-4">
-//           <Link to="/post-ad">
-//           <button
-//              className='w-full p-2  bg-green-500 text-white '
-//             onClick={() => handleViewChange('postAd')}
-//           >
-//             Post an Ad
-//           </button>
-//           </Link>
-          
-//         </li>
-//         <li className="mb-4">
-          
-//           <button className="w-full p-2 bg-red-500 text-white">Logout</button>
-//         </li>
-//       </ul>
-//     </div>
+const Sidebar = () => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
-//   )
-// }
+  return (
+    <aside
+      className={`bg-blue-600 text-white transition-all duration-300 ${
+        isSidebarCollapsed ? "w-20" : "w-64"
+      } flex flex-col p-4 h-full fixed`} // Sidebar container
+    >
+      {/* Step button fixed at the top */}
+      <button
+        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        className="text- mb-4 font-bold text-xl absolute top-4 left-4 z-10 "
+      >
+        STEP
+      </button>
 
-// export default Sidebar
+      {/* Search bar */}
+      {!isSidebarCollapsed && (
+        <div className="mb-4 flex items-center bg-gray-100 rounded px-2 py-1 mt-10">
+          {" "}
+          {/* Adjust margin-top to account for the Step button */}
+          <FaSearch className="text-gray-300 mr-2" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-2 rounded text-white placeholder-gray-300 border-none outline-none"
+          />
+        </div>
+      )}
 
-    
-{/*     
-    <div className="w-1/4 bg-[#22C55E] text-white h-screen">
-    <h1 className="text-2xl p-5 font-bold">Dashboard</h1>
-    <div className="flex text-2xl flex-col">
-      <Link to='/' className="p-4 hover:bg-green-900">Home</Link>
-      <Link to="/myads" className="p-4 hover:bg-green-900">My Ads</Link>
-      <Link to="/post-ad" className="p-4 hover:bg-green-900">Post an Ad</Link>
+      {/* Dashboard link */}
+      {!isSidebarCollapsed && (
+        <Link
+          to="/dashboard"
+          title="Dashboard"
+          className="bg-gray-100 hover:bg-yellow-500 text-blue-700 hover:text-white p-3 rounded flex items-center justify-center w-full mb-4"
+        >
+          <span>Dashboard</span>
+        </Link>
+      )}
 
-    </div>
-  </div>
+      {/* Navigation links */}
+      <nav
+        className={`flex flex-col space-y-4 ${
+          isSidebarCollapsed ? "items-center" : ""
+        } mt-8`} // Add margin-top to avoid overlap with "Step" button and ensure proper spacing
+      >
+        <Link
+          to="/dashboard/docs"
+          title="Documents"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaFolderOpen size={24} />
+          {!isSidebarCollapsed && <span>Post Documents</span>}
+        </Link>
+        <Link
+          to="/dashboard/reports"
+          title="Reports"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaFileAlt size={24} />
+          {!isSidebarCollapsed && <span>Register Teacher</span>}
+        </Link>
+        <Link
+          to="/dashboard/reports"
+          title="Reports"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaFileAlt size={24} />
+          {!isSidebarCollapsed && <span>Register Student</span>}
+        </Link>
 
+        <Link
+          to="/dashboard/archives"
+          title="Archives"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaArchive size={24} />
+          {!isSidebarCollapsed && <span>Archives</span>}
+        </Link>
+      </nav>
 
-    
-    <div className="w-1/4 bg-[#22C55E] p-5  text-white ">
-    <h2 className="text-lg font-bold mb-5">Sidebar</h2>
-    <div className='flex flex-col'>
-   
-      <Link href="#" className=" mb-3">DashBoard</Link>
-      <Link href="/myads" className=" mb-3">My Ads</Link>
-      <Link href="/" className=" mb-3">Home</Link>
-      {/* <Link href="#" className=" mb-3">Link 4</Link>  */}
-   
-   
-    
- 
-      import React from 'react';
-      import { Link, useLocation } from 'react-router-dom';
-      import logo from "../assets/image/logo.png";
-      const Sidebar = ({ links }) => {
-        const location = useLocation();
-      
-        return (
-          <div className="w-64 bg-[rgba(8,42,88,0.9)] text-white h-screen fixed">
-            {/* <div className="p-4 text-2xl font-bold border-b border-gray-700">
-              EduBridge
-            </div> */}
-             <div className="flex justify-center mt-5">
-        <img
-          className="font-bold  rounded-full border-2   w-24 h-24 text-2xl  flex items-center justify-center"
-          src={logo}
-          alt=""
-        />
+      {/* Settings and Messaging & Help section at the bottom */}
+      <div className="mt-48 flex flex-col space-y-4">
+        <Link
+          to="/dashboard/settings"
+          title="Settings"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaCog size={24} />
+          {!isSidebarCollapsed && <span>Settings</span>}
+        </Link>
+        <Link
+          to="/dashboard/help"
+          title="Messaging & Help"
+          className="hover:bg-yellow-500 p-2 rounded flex items-center space-x-2"
+        >
+          <FaQuestionCircle size={24} />
+          {!isSidebarCollapsed && <span>Messaging & Help</span>}
+        </Link>
       </div>
-            <nav className="p-4">
-              {links.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`block py-2 px-4 rounded ${
-                    location.pathname === link.path ? 'bg-yellow-500' : 'hover:bg-yellow-500'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        );
-      };
-      
-      export default Sidebar;
-      
+    </aside>
+  );
+};
+
+export default Sidebar;
