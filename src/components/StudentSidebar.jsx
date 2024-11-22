@@ -1,9 +1,27 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaBook, FaChalkboardTeacher, FaGraduationCap, FaBars, FaTimes, FaChevronDown, FaChevronUp, FaBell, FaSignOutAlt, FaList, FaPlus, FaUserPlus, FaUsers, FaPaperPlane, FaBullhorn, FaEnvelope, FaChartPie, FaHome, FaChartLine, FaCalendarCheck } from 'react-icons/fa';
+import { 
+  FaBook, 
+  FaClipboardList, 
+  FaChartLine, 
+  FaBars, 
+  FaTimes, 
+  FaChevronDown, 
+  FaChevronUp, 
+  FaBell, 
+  FaSignOutAlt,
+  FaList,
+  FaCalendarAlt,
+  FaGraduationCap,
+  FaFileAlt,
+  FaEnvelope,
+  FaTasks,
+  FaUserGraduate,
+  FaUserCircle
+} from 'react-icons/fa';
 import logo from '../assets/image/logo.png';
 
-const Sidebar = () => {
+const StudentSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
@@ -12,46 +30,36 @@ const Sidebar = () => {
 
   const menuItems = [
     {
-      title: 'Dashboard',
-      icon: <FaChartPie />,
+      title: 'My Profile',
+      icon: <FaUserCircle />,
       submenu: [
-        { title: 'Overview', path: '/admin', icon: <FaHome /> },
-        { title: 'Grades', path: '/admin/grades', icon: <FaChartLine /> },
-        { title: 'Attendance', path: '/admin/attendance', icon: <FaCalendarCheck /> },
+        { title: 'View Profile', path: '/student/profile', icon: <FaUserCircle /> },
+        { title: 'Goals', path: '/student/goals', icon: <FaTasks /> },
       ]
     },
     {
-      title: 'Courses',
-      icon: <FaBook />,
-      submenu: [
-        { title: 'View All Courses', path: '/admin/course-list', icon: <FaList /> },
-        { title: 'Add Course', path: '/admin/add-course', icon: <FaPlus /> },
-      ]
-    },
-    {
-      title: 'Teachers',
-      icon: <FaChalkboardTeacher />,
-      submenu: [
-        { title: 'View All Teachers', path: '/admin/teacher-list', icon: <FaUsers /> },
-        { title: 'Add Teacher', path: '/admin/register-teacher', icon: <FaUserPlus /> },
-        { title: 'Send Notification', path: '/admin/notify-teachers', icon: <FaPaperPlane /> },
-      ]
-    },
-    {
-      title: 'Students',
+      title: 'Academic',
       icon: <FaGraduationCap />,
       submenu: [
-        { title: 'View All Students', path: '/admin/student-list', icon: <FaUsers /> },
-        { title: 'Add Student', path: '/admin/register-student', icon: <FaUserPlus /> },
-        { title: 'Send Notification', path: '/admin/notify-students', icon: <FaPaperPlane /> },
+        { title: 'Grades', path: '/student/grades', icon: <FaChartLine /> },
+        { title: 'Assignments', path: '/student/assignments', icon: <FaClipboardList /> },
+        { title: 'Materials', path: '/student/materials', icon: <FaBook /> },
       ]
     },
     {
-      title: 'Notifications',
+      title: 'Personal Goals',
+      icon: <FaTasks />,
+      submenu: [
+        { title: 'Set Goals', path: '/student/goals', icon: <FaTasks /> },
+        { title: 'Track Progress', path: '/student/track-goals', icon: <FaChartLine /> },
+      ]
+    },
+    {
+      title: 'Communication',
       icon: <FaBell />,
       submenu: [
-        { title: 'All Notifications', path: '/admin/notifications', icon: <FaEnvelope /> },
-        { title: 'Send Broadcast', path: '/admin/send-broadcast', icon: <FaBullhorn /> },
+        { title: 'Messages', path: '/student/messages', icon: <FaEnvelope /> },
+        { title: 'Notifications', path: '/student/notifications', icon: <FaBell /> },
       ]
     }
   ];
@@ -66,13 +74,12 @@ const Sidebar = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
       sessionStorage.clear();
-      delete apiClient.defaults.headers.common['Authorization'];
-      navigate('/admin-login');
+      navigate('/student-login');
     }
   };
 
   return (
-   <div>
+    <>
       {/* Mobile Menu Button */}
       <button
         className="fixed top-4 left-4 z-50 p-2 rounded-md lg:hidden text-white bg-[rgba(8,42,88,0.9)]"
@@ -90,14 +97,17 @@ const Sidebar = () => {
       )}
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full bg-[rgba(8,42,88,0.9)] text-white transform transition-all duration-300 ease-in-out z-40 
-          ${isOpen || isHovered ? 'w-64' : 'w-20'} lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-0'}`}
+      <aside
+        className={`fixed left-0 top-0 h-full bg-[rgba(8,42,88,0.9)] text-white transform transition-all duration-300 ease-in-out z-40 
+          ${isOpen || isHovered ? 'w-64' : 'w-20'} 
+          lg:translate-x-0 
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Logo/Header */}
-        <div className="p-4  mt-20 ">
+        <div className="p-4 mt-20 ">
           <div className="flex items-center justify-center">
             <img 
               src={logo} 
@@ -107,11 +117,11 @@ const Sidebar = () => {
               } object-contain`}
             />
           </div>
-          {/* <h2 className={`text-2xl font-bold text-center mt-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${
+          <h2 className={`text-2xl font-bold text-center mt-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${
             !isOpen && !isHovered ? 'opacity-0' : 'opacity-100'
           }`}>
-            Admin Dashboard
-          </h2> */}
+            Student Portal
+          </h2>
         </div>
 
         {/* Navigation Links */}
@@ -120,7 +130,7 @@ const Sidebar = () => {
             <div key={item.title}>
               <button
                 onClick={() => toggleDropdown(item.title)}
-                className="w-full flex items-center justify-between px-6 py-3 text-lg hover:bg-blue-700 transition-colors duration-200"
+                className="w-full flex items-center justify-between px-6 py-3 text-lg hover:bg-blue-800 transition-colors duration-200"
               >
                 <div className="flex items-center min-w-max">
                   <span className="mr-3">{item.icon}</span>
@@ -172,14 +182,9 @@ const Sidebar = () => {
             </span>
           </button>
         </div>
-      </div>
-
-      {/* Main Content Wrapper */}
-      {/* <div className={`lg:ml-${isOpen || isHovered ? '64' : '20'} transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-0'}`}> */}
-        {/* Your main content goes here */}
-      {/* </div> */}
-      </div>
+      </aside>
+    </>
   );
 };
 
-export default Sidebar;
+export default StudentSidebar; 

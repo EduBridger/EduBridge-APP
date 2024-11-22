@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+
+
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiAdminRegisterTeacher } from "../../services/auth";
 
 const TeacherRegistrationForm = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -14,18 +15,7 @@ const TeacherRegistrationForm = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      setErrorMessage('Please login as admin first');
-      setTimeout(() => {
-        navigate('/admin-login');
-      }, 2000);
-    }
-  }, [navigate]);
-
+const navigate = useNavigate ()
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -34,12 +24,12 @@ const TeacherRegistrationForm = () => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
-    setSuccessMessage("");
 
     try {
-      const token = localStorage.getItem('accessToken');
+      // Check for admin token again before submitting
+      const token = localStorage.getItem("accessToken");
       if (!token) {
-        throw new Error('Admin authentication required. Please login first.');
+        throw new Error("Admin authentication required");
       }
 
       const payload = {
@@ -48,50 +38,36 @@ const TeacherRegistrationForm = () => {
         course: formData.course,
         email: formData.email,
         password: formData.password,
-        role: "teacher"
+        role: "teacher",
       };
 
-      console.log('Sending registration payload:', payload);
+      console.log("Sending teacher registration payload:", payload);
       const response = await apiAdminRegisterTeacher(payload);
-      console.log('Registration response:', response);
-      
-      // Store the registration details for verification
-      localStorage.setItem('lastRegisteredTeacher', JSON.stringify({
-        email: payload.email,
-        password: payload.password
-      }));
+      console.log("Registration response:", response);
 
-      if (response.status === 201) {
-        setSuccessMessage(`Teacher ${formData.firstName} ${formData.lastName} registered successfully!`);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          course: "",
-          email: "",
-          password: "",
-        });
+      if (response && response.data) {
+        setShowAlert(true);
         setTimeout(() => {
           navigate("/admin");
         }, 2000);
       }
-
     } catch (error) {
       console.error("Registration error:", error);
-      
+
       if (error.response?.status === 401) {
-        setErrorMessage('Admin authentication required. Please login again.');
+        setErrorMessage("Teacher already register.");
         setTimeout(() => {
-          navigate('/admin-login');
-        }, 2000);
-      } else if (error.message.includes('Admin authentication required')) {
-        setErrorMessage('Please login as admin first');
-        setTimeout(() => {
-          navigate('/admin-login');
+          navigate("/admin");
         }, 2000);
       } else if (error.response) {
-        setErrorMessage(error.response.data?.message || "Registration failed. Please try again.");
+        setErrorMessage(
+          error.response.data?.message ||
+            "Registration failed. Please try again."
+        );
       } else {
-        setErrorMessage(error.message || "An error occurred during registration.");
+        setErrorMessage(
+          error.message || "An error occurred during registration."
+        );
       }
     } finally {
       setLoading(false);
@@ -102,19 +78,6 @@ const TeacherRegistrationForm = () => {
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Teacher Registration Form</h2>
-        
-        {successMessage && (
-          <div className="mb-4 bg-green-500 text-white p-3 rounded-lg">
-            {successMessage}
-          </div>
-        )}
-
-        {errorMessage && (
-          <div className="mb-4 bg-red-500 text-white p-3 rounded-lg">
-            {errorMessage}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -231,6 +194,30 @@ const TeacherRegistrationForm = () => {
             </button>
           </div>
         </form>
+
+        {showAlert && (
+          <div className="fixed top-0 left-0 w-full bg-green-500 text-white p-4 flex justify-between items-center">
+            <p>Teacher registered successfully!</p>
+            <button
+              className="text-white hover:text-gray-200 focus:outline-none"
+              onClick={() => setShowAlert(false)}
+            >
+              &times;
+            </button>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div className="fixed top-0 left-0 w-full bg-red-500 text-white p-4 flex justify-between items-center">
+            <p>{errorMessage}</p>
+            <button
+              className="text-white hover:text-gray-200 focus:outline-none"
+              onClick={() => setErrorMessage("")}
+            >
+              &times;
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -238,8 +225,7 @@ const TeacherRegistrationForm = () => {
 
 export default TeacherRegistrationForm;
 
-
-// import { 
-//   apiAdminRegisterTeacher, 
-//   refreshAccessToken 
+// import {
+//   apiAdminRegisterTeacher,
+//   refreshAccessToken
 // } from '../../services/auth';

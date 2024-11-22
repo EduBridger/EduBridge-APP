@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import {
-    apiAdminRegisterStudent,
-} from "../../services/auth";
 import { useNavigate } from "react-router-dom";
+import { apiAdminRegisterStudent } from "../../services/auth";
 
 const StudentRegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -12,11 +9,12 @@ const StudentRegistrationForm = () => {
     course: "",
     email: "",
     password: "",
-    role: "",
+    role: "student",
   });
-
   const [showAlert, setShowAlert] = useState(false);
-const navigate = useNavigate
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,30 +22,75 @@ const navigate = useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
 
     try {
-      const payload = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        course: formData.course,
-        email: formData.email,
-        password: formData.password,
-        role: "student",
-      };
-      const response = await apiAdminRegisterStudent(payload);
-
-      if (response.data.success) {
-        setShowAlert(true);
-        // Reset form data or perform other actions
+      // Check for admin token
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("Admin authentication required");
       }
 
-      console.log("Student registration successful:", response.data);
+      // Validate inputs
+      if (!formData.email || !formData.password || !formData.firstName || !formData.lastName || !formData.course) {
+        setErrorMessage("All fields are required");
+        return;
+      }
 
-      navigate("/admin");
+      const payload = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        course: formData.course.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        role: "student"
+      };
 
+      console.log("Sending student registration payload:", {
+        ...payload,
+        passwordLength: payload.password.length
+      });
+
+      const response = await apiAdminRegisterStudent(payload);
+      console.log("Registration response:", response);
+
+      if (response?.data) {
+        setShowAlert(true);
+        // Clear form after successful registration
+        setFormData({
+          firstName: "",
+          lastName: "",
+          course: "",
+          email: "",
+          password: "",
+          role: "student"
+        });
+        
+        setTimeout(() => {
+          navigate("/admin");
+        }, 2000);
+      }
     } catch (error) {
-      console.error("Error signing up student:", error);
-      // Handle error, e.g., display an error message
+      console.error("Registration error:", {
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        data: error.response?.data
+      });
+
+      if (error.response?.status === 401) {
+        setErrorMessage("Admin authentication required. Please log in again.");
+      } else if (error.response?.status === 400) {
+        setErrorMessage(error.response?.data?.message || "Invalid registration data");
+      } else if (error.response?.status === 409) {
+        setErrorMessage("Student with this email already exists");
+      } else {
+        setErrorMessage(
+          error.response?.data?.message || "Registration failed. Please try again."
+        );
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +113,7 @@ const navigate = useNavigate
               value={formData.firstName}
               onChange={handleInputChange}
               className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter user's first name"
+              placeholder="Enter student's first name"
               required
             />
           </div>
@@ -88,7 +131,7 @@ const navigate = useNavigate
               value={formData.lastName}
               onChange={handleInputChange}
               className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter user's last name"
+              placeholder="Enter student's last name"
               required
             />
           </div>
@@ -97,7 +140,7 @@ const navigate = useNavigate
               htmlFor="course"
               className="block text-gray-700 font-bold mb-2"
             >
-             Program
+              Course
             </label>
             <input
               type="text"
@@ -106,7 +149,7 @@ const navigate = useNavigate
               value={formData.course}
               onChange={handleInputChange}
               className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter students' program"
+              placeholder="Enter course"
               required
             />
           </div>
@@ -124,7 +167,7 @@ const navigate = useNavigate
               value={formData.email}
               onChange={handleInputChange}
               className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter user's email"
+              placeholder="Enter student's email"
               required
             />
           </div>
@@ -142,36 +185,17 @@ const navigate = useNavigate
               value={formData.password}
               onChange={handleInputChange}
               className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter user's password"
+              placeholder="Set a password for the student"
               required
             />
           </div>
-          {/* <div className="mb-4">
-            <label
-              htmlFor="role"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Role
-            </label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            >
-              <option value="">Select a role</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
-          </div> */}
           <div className="flex justify-between">
             <button
               type="submit"
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={loading}
             >
-              Register
+              {loading ? "Registering..." : "Register"}
             </button>
             <button
               type="button"
@@ -182,7 +206,7 @@ const navigate = useNavigate
                   lastName: "",
                   email: "",
                   password: "",
-                  role: "",
+                  course: "",
                 })
               }
             >
@@ -190,15 +214,25 @@ const navigate = useNavigate
             </button>
           </div>
         </form>
+
         {showAlert && (
           <div className="fixed top-0 left-0 w-full bg-green-500 text-white p-4 flex justify-between items-center">
-            <p>
-              User registered successfully. A notification has been sent to the
-              user's email address.
-            </p>
+            <p>Student registered successfully!</p>
             <button
               className="text-white hover:text-gray-200 focus:outline-none"
               onClick={() => setShowAlert(false)}
+            >
+              &times;
+            </button>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div className="fixed top-0 left-0 w-full bg-red-500 text-white p-4 flex justify-between items-center">
+            <p>{errorMessage}</p>
+            <button
+              className="text-white hover:text-gray-200 focus:outline-none"
+              onClick={() => setErrorMessage("")}
             >
               &times;
             </button>

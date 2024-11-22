@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { apiTeacherLogin } from '../../services/auth';
+import bg from "../../assets/image/logo.png"
+
+import { Link } from 'react-router-dom';
 
 const TeacherLoginForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
@@ -16,33 +21,84 @@ const TeacherLoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage('');
+    setShowAlert(false);
 
     try {
-      const response = await axios.post('http://localhost:3800/teacher/login', formData, {
-        headers: {
-          Authorization: 'Bearer <your_access_token_here>',
-        },
+      const payload = {
+        email: formData.email.trim(),
+        password: formData.password
+      };
+
+      console.log('Attempting login with:', {
+        email: payload.email,
+        passwordLength: payload.password.length
       });
 
-      if (response.data.success) {
-        // Handle successful login, e.g., redirect to teacher dashboard
-        navigate('/teacher-dashboard');
-      } else {
-        // Handle login failure, e.g., display an error message
-        console.error('Login failed:', response.data.error);
+      const response = await apiTeacherLogin(payload);
+
+      if (response.data?.token) {
         setShowAlert(true);
+        localStorage.setItem('userRole', 'teacher');
+        
+        setTimeout(() => {
+          navigate('/teacher');
+        }, 2000);
+      } else {
+        setErrorMessage('Login failed: Authentication token not received');
       }
+
     } catch (error) {
-      console.error('Error logging in:', error);
-      // Handle error, e.g., display an error message
-      setShowAlert(true);
+      console.error('Login error:', {
+        status: error.response?.status,
+        message: error.response?.data
+      });
+      
+      if (error.response?.status === 401) {
+        setErrorMessage('Invalid email or password');
+      } else if (error.response?.status === 400) {
+        setErrorMessage('Please provide valid email and password');
+      } else if (error.response?.status === 404) {
+        setErrorMessage('Teacher account not found');
+      } else {
+        setErrorMessage('Login failed. Please try again later');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Teacher Login</h2>
+    <div className="w-[80%] h-screen mx-auto flex flex-col md:flex-row bg-[#2a557a] text-black p-8 rounded-lg">
+    {/* Left Section */}
+    <div className="md:w-[50%] h-[90%] ">
+    <img
+            className="font-bold h-full  w-full text-2xl pt-8  flex mb-5 items-center justify-center"
+            src={bg}
+            alt=""
+          />
+     <p> By logging on  to EduBridge, you agree to our <span> <Link to='/' className='text-yellow-500'>Terms </Link></span>of use  and <span><Link to='/' className='text-yellow-500'>Privacy </Link>Policy.</span></p>
+       
+    </div>
+  
+    {/* Right Section */}
+    <div className='bg-white p-8 ml-3 w-[40%] h-[70%] mt-20 rounded-lg'>
+    <h2 className="text-2xl font-bold text-black ">Teacher Log in</h2>
+        {/* Success Alert */}
+        {showAlert && (
+          <div className="mb-4 bg-green-500 text-white p-3 rounded-lg">
+            Login successful! Redirecting to dashboard...
+          </div>
+        )}
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="mb-4 bg-red-500 text-white p-3 rounded-lg">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
@@ -78,25 +134,12 @@ const TeacherLoginForm = () => {
             <button
               type="submit"
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={loading}
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
-            <a href="#" className="text-indigo-600 hover:text-indigo-700 font-bold">
-              Forgot Password?
-            </a>
           </div>
         </form>
-        {showAlert && (
-          <div className="fixed top-0 left-0 w-full bg-red-500 text-white p-4 flex justify-between items-center">
-            <p>Login failed. Please check your credentials and try again.</p>
-            <button
-              className="text-white hover:text-gray-200 focus:outline-none"
-              onClick={() => setShowAlert(false)}
-            >
-              &times;
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

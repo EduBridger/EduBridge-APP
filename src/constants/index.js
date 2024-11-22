@@ -1,4 +1,5 @@
 import { faBoltLightning, faBookOpenReader, faDownload, faEgg, faGraduationCap, faMessage } from "@fortawesome/free-solid-svg-icons";
+import { FaBookOpenReader } from "react-icons/fa6";
 
 
 
@@ -8,44 +9,27 @@ const items = {
         {
             icon: faBoltLightning,
             iconColor: "#2a557a",
-            text: "Teachers",
-            description: "Create engaging school and  materials in minutes with EduBridge easy-to-use, App.",
-            backgroundColor: "#2a557a",
+            text: "Administrators",
+            description: "Create engaging school materials in minutes with EduBridge easy-to-use, App.",
+           
         },
+
+        {
+            icon: faBookOpenReader,
+            iconColor: "#2a557a",
+            text: "Teachers",
+            description: "With EduBridge teachers can identify gaps in their student's understanding, tailor instruction, and meet the needs of every student.",
+        },
+
         {
             icon: faGraduationCap,
-            iconColor: "",
+            iconColor: "#2a557a",
             text: "Students",
-            description: "Access school Materials in the comfort of your home."
+            description: "Students practice at their own pace, first filling in gaps in their understanding and then accelerating their learning. Access school Materials in the comfort of your home."
         },
-        {
-            icon:faDownload,
-            iconColor: "",
-            text: "Parents",
-            description: "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts."
-        },
-        {
-            icon:faBookOpenReader,
-            iconColor: "",
-            text: "Parents",
-            description: "Monitor the progress of your ward."
-        },
-        {
-            icon: faMessage,
-            iconColor: "",
-            text: "History Class",
-            description: "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
-            descriptionbg: "#2a557a"
-        },
-        {
-            icon: faEgg,
-            iconColor: "",
-            text: "Active Class",
-            description: "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts."
-        },
-    ]
-
-    
+       
+       
+    ] 
 }
 
 export default items;

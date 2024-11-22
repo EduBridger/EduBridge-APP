@@ -8,14 +8,14 @@ const Offers = () => {
     items.OFFERS.map((offer, index) => {
       console.log(`${index}: ${offer.text}`);
       return (
-        <div  key={index} className="flex flex-col gap-y-2 bg-white justify-center items-center border  shadow-lg rounded-lg ">
-            <span className="p-4 mt-3 bg-[#FFC820] w-fit text-white rounded-lg text-2xl">
+        <div  key={index} className="flex flex-col gap-y-2 bg-white justify-center items-center border  shadow-lg rounded-lg h-[300px]">
+            <span className="p-4  bg-[#FFC820] w-fit text-white rounded-lg text-2xl">
                 <FontAwesomeIcon icon={offer.icon} color={offer.iconColor} ></FontAwesomeIcon>
             </span>
-            <h3 className="text-2xl  text-white font-bold">{offer.text}</h3>
-            <div className= "bg-[#1C8DCB] h-full w-full flex items-center justify-center  text-white">
+            <h3 className="text-2xl  text-[rgba(8,42,88,0.9)] font-bold">{offer.text}</h3>
+            <h3 className= "bg-[rgba(8,42,88,0.9)] h-full mt-7 w-full flex items-center justify-center  text-white p-5">
             {offer.description} 
-            </div>
+            </h3>
         </div>
       )
      })   

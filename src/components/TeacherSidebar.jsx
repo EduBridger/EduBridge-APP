@@ -1,9 +1,27 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaBook, FaChalkboardTeacher, FaGraduationCap, FaBars, FaTimes, FaChevronDown, FaChevronUp, FaBell, FaSignOutAlt, FaList, FaPlus, FaUserPlus, FaUsers, FaPaperPlane, FaBullhorn, FaEnvelope, FaChartPie, FaHome, FaChartLine, FaCalendarCheck } from 'react-icons/fa';
+import { 
+  FaBook, 
+  FaClipboardList, 
+  FaUserGraduate, 
+  FaBars, 
+  FaTimes, 
+  FaChevronDown, 
+  FaChevronUp, 
+  FaBell, 
+  FaSignOutAlt,
+  FaList,
+  FaCalendarAlt,
+  FaGraduationCap,
+  FaFileAlt,
+  FaEnvelope,
+  FaChalkboardTeacher,
+  FaCalendarCheck,
+  FaChartLine
+} from 'react-icons/fa';
 import logo from '../assets/image/logo.png';
 
-const Sidebar = () => {
+const TeacherSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
@@ -12,46 +30,27 @@ const Sidebar = () => {
 
   const menuItems = [
     {
-      title: 'Dashboard',
-      icon: <FaChartPie />,
-      submenu: [
-        { title: 'Overview', path: '/admin', icon: <FaHome /> },
-        { title: 'Grades', path: '/admin/grades', icon: <FaChartLine /> },
-        { title: 'Attendance', path: '/admin/attendance', icon: <FaCalendarCheck /> },
-      ]
-    },
-    {
-      title: 'Courses',
-      icon: <FaBook />,
-      submenu: [
-        { title: 'View All Courses', path: '/admin/course-list', icon: <FaList /> },
-        { title: 'Add Course', path: '/admin/add-course', icon: <FaPlus /> },
-      ]
-    },
-    {
-      title: 'Teachers',
+      title: 'Class Management',
       icon: <FaChalkboardTeacher />,
       submenu: [
-        { title: 'View All Teachers', path: '/admin/teacher-list', icon: <FaUsers /> },
-        { title: 'Add Teacher', path: '/admin/register-teacher', icon: <FaUserPlus /> },
-        { title: 'Send Notification', path: '/admin/notify-teachers', icon: <FaPaperPlane /> },
+        { title: 'Assignments', path: '/teacher/assignments', icon: <FaClipboardList /> },
+        { title: 'Materials', path: '/teacher/materials', icon: <FaBook /> },
       ]
     },
     {
-      title: 'Students',
-      icon: <FaGraduationCap />,
+      title: 'Student Records',
+      icon: <FaUserGraduate />,
       submenu: [
-        { title: 'View All Students', path: '/admin/student-list', icon: <FaUsers /> },
-        { title: 'Add Student', path: '/admin/register-student', icon: <FaUserPlus /> },
-        { title: 'Send Notification', path: '/admin/notify-students', icon: <FaPaperPlane /> },
+        { title: 'Attendance', path: '/teacher/attendance', icon: <FaCalendarCheck /> },
+        { title: 'Grades', path: '/teacher/grades', icon: <FaChartLine /> },
       ]
     },
     {
-      title: 'Notifications',
+      title: 'Communication',
       icon: <FaBell />,
       submenu: [
-        { title: 'All Notifications', path: '/admin/notifications', icon: <FaEnvelope /> },
-        { title: 'Send Broadcast', path: '/admin/send-broadcast', icon: <FaBullhorn /> },
+        { title: 'Notifications', path: '/teacher/notifications', icon: <FaEnvelope /> },
+        { title: 'Student Messages', path: '/teacher/messages', icon: <FaEnvelope /> },
       ]
     }
   ];
@@ -66,13 +65,12 @@ const Sidebar = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
       sessionStorage.clear();
-      delete apiClient.defaults.headers.common['Authorization'];
-      navigate('/admin-login');
+      navigate('/teacher-login');
     }
   };
 
   return (
-   <div>
+    <>
       {/* Mobile Menu Button */}
       <button
         className="fixed top-4 left-4 z-50 p-2 rounded-md lg:hidden text-white bg-[rgba(8,42,88,0.9)]"
@@ -81,6 +79,8 @@ const Sidebar = () => {
         {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </button>
 
+      
+
       {/* Overlay for mobile */}
       {isOpen && (
         <div
@@ -88,16 +88,26 @@ const Sidebar = () => {
           onClick={() => setIsOpen(false)}
         />
       )}
+       
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )} 
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full bg-[rgba(8,42,88,0.9)] text-white transform transition-all duration-300 ease-in-out z-40 
-          ${isOpen || isHovered ? 'w-64' : 'w-20'} lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-0'}`}
+      <aside
+        className={`fixed left-0 top-0 h-full bg-[rgba(8,42,88,0.9)] text-white transform transition-all duration-300 ease-in-out z-40 
+          ${isOpen || isHovered ? 'w-64' : 'w-20'} 
+          lg:translate-x-0 
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Logo/Header */}
-        <div className="p-4  mt-20 ">
+        <div className="p-4 mt-20 border-b border-gray-600">
           <div className="flex items-center justify-center">
             <img 
               src={logo} 
@@ -107,11 +117,11 @@ const Sidebar = () => {
               } object-contain`}
             />
           </div>
-          {/* <h2 className={`text-2xl font-bold text-center mt-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${
+          <h2 className={`text-2xl font-bold text-center mt-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${
             !isOpen && !isHovered ? 'opacity-0' : 'opacity-100'
           }`}>
-            Admin Dashboard
-          </h2> */}
+            Teacher Dashboard
+          </h2>
         </div>
 
         {/* Navigation Links */}
@@ -120,7 +130,7 @@ const Sidebar = () => {
             <div key={item.title}>
               <button
                 onClick={() => toggleDropdown(item.title)}
-                className="w-full flex items-center justify-between px-6 py-3 text-lg hover:bg-blue-700 transition-colors duration-200"
+                className="w-full flex items-center justify-between px-6 py-3 text-lg hover:bg-blue-800 transition-colors duration-200"
               >
                 <div className="flex items-center min-w-max">
                   <span className="mr-3">{item.icon}</span>
@@ -161,7 +171,7 @@ const Sidebar = () => {
         </nav>
 
         {/* Logout Button */}
-        <div className="absolute bottom-0 w-full p-6 ">
+        <div className="absolute bottom-0 w-full p-6 border-t border-gray-600">
           <button
             onClick={handleLogout}
             className="w-full px-4 py-2 text-center bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center justify-center gap-2"
@@ -172,14 +182,9 @@ const Sidebar = () => {
             </span>
           </button>
         </div>
-      </div>
-
-      {/* Main Content Wrapper */}
-      {/* <div className={`lg:ml-${isOpen || isHovered ? '64' : '20'} transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-0'}`}> */}
-        {/* Your main content goes here */}
-      {/* </div> */}
-      </div>
+      </aside>
+    </>
   );
 };
 
-export default Sidebar;
+export default TeacherSidebar; 
