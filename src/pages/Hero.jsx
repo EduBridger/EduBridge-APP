@@ -5,7 +5,7 @@ import { FaChalkboardTeacher, FaGraduationCap, FaHome } from "react-icons/fa";
 
 const Hero = () => {
   return (
-    <div className="h-screen grid grid-cols-2   w-full">
+    <div className="h-screen grid grid-cols-2 w-full">
       <div className="mt-[70px] w-[100%] h-screen">
         <img className="object-cover h-full" src={heroimg} alt="" srcset="" />
       </div>
