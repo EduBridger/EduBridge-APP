@@ -1,177 +1,179 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { apiAdminLogin } from "../../services/auth"; // Ensure this is correctly implemented
-import { Link } from "react-router-dom";
-import bg from "../../assets/image/logo.png";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUserShield, FaLock, FaEnvelope } from 'react-icons/fa';
+import logo from '../../assets/image/logo.png';
+import { apiAdminLogin } from '../../services/auth';
+import SuccessPopup from '../../components/SuccessPopup';
 
 const AdminLoginForm = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
-
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError(''); // Clear error when user types
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-
+    setLoading(true);
+    setError('');
+    
     try {
-      const payload = {
-        email: formData.email,
-        password: formData.password,
-        role: 'admin'
-      };
-
-      console.log('Sending login request with payload:', payload);
-      const response = await apiAdminLogin(payload);
-      console.log('Received login response:', response);
-
-      // Check the actual structure of your response
-      const { data } = response;
-      console.log('Response data:', data);
-
-      // Assuming your backend sends token as either data.token or data.accessToken
-      const token = data.token || data.accessToken;
-      
-      if (!token) {
-        throw new Error('No token received from server');
+      const response = await apiAdminLogin(formData);
+      if (response.data.token) {
+        setShowSuccess(true);
+        localStorage.setItem('accessToken', response.data.token);
+        setTimeout(() => {
+          navigate('/admin');
+        }, 2000);
       }
-
-      // Token should already be stored by apiAdminLogin, but let's verify
-      const storedToken = localStorage.getItem('accessToken');
-      console.log('Stored token:', storedToken);
-
-      setShowAlert(true);
-      setTimeout(() => {
-        navigate('/admin');
-      }, 2000);
-
     } catch (error) {
-      console.error('Login Error Details:', {
-        error: error,
-        response: error.response,
-        data: error.response?.data
-      });
-      
-      if (error.response?.status === 401) {
-        setErrorMessage('Invalid email or password.');
-      } else if (error.response?.data?.message) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage(error.message || 'An unexpected error occurred.');
-      }
+      setError(error.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-[60%] h-screen mx-auto flex flex-col md:flex-row bg-[#2a557a] text-white p-8 rounded-lg">
-      {/* Left Section */}
-      <div className="md:w-1/2 h-[90%] mt-10">
-        <img
-          className="font-bold h-[90%] w-full text-2xl flex items-center justify-center"
-          src={bg}
-          alt=""
-        />
-        <p>
-          By Logging to EduBridge, you agree to our
-          <span>
-            <Link to="/" className="text-yellow-600"> Terms </Link>
-          </span> and 
-          <span>
-            <Link to="/" className="text-yellow-600"> Privacy </Link>Policy.
-          </span>
-        </p>
-      </div>
+    <div className='w-full h-full'>
+    {showSuccess && <SuccessPopup message="Login successful! Redirecting to dashboard..." />}
+    <div className="border bg-[rgba(8,42,88,0.9)] rounded-md shadow-md h-full w-[40%]  mx-auto">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-2xl p-8">
+          <div className="text-center mb-8">
+            <img
+              src={logo}
+              alt="Logo"
+              className="mx-auto h-24 w-auto mb-4 transform hover:scale-105 transition-transform duration-300"
+            />
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h2>
+            <p className="text-gray-600">Sign in to your administrator account</p>
+          </div>
 
-      {/* Right Section */}
-      <div
-        className="md:w-[70%] text-black p-8 rounded-lg ml-1 shadow-lg h-[80%] mt-20 flex flex-col justify-center bg-white"
-      >
-        <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-500 font-bold mb-2"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-500 font-bold mb-2"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          <div className="flex justify-between">
+          {error && (
+            <div className="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded relative">
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaEnvelope className="h-5 w-5 text-gray-400" />
+                </div>
+                <div className='bg-[rgba(8,42,88,0.9)]'>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
+                  placeholder="Admin email"
+                />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="h-5 w-5 text-gray-400" />
+                </div>
+                <div className='bg-[rgba(8,42,88,0.9)]'>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
+                  placeholder="Password"
+                />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 text-[rgba(8,42,88,0.9)] focus:ring-[rgba(8,42,88,0.9)] border-gray-300 rounded transition-all duration-300"
+                />
+                <label className="ml-2 block text-sm text-gray-900">
+                  Remember me
+                </label>
+              </div>
+              <div className="text-sm">
+                <Link to="/admin/forgot-password" className="font-medium text-[rgba(8,42,88,0.9)] hover:text-blue-500 transition-colors duration-300">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="bg-[#2a557a] hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[rgba(8,42,88,0.9)] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(8,42,88,0.9)] transition-all duration-300 disabled:opacity-50"
             >
-              Login
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+                  <span className="ml-2">Signing in...</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <FaUserShield className="mr-2" />
+                  Sign In as Admin
+                </div>
+              )}
             </button>
-          </div>
-          {/* <div className="mt-3 text-sm">
-            <p>
-              Don't have an account{" "}
-              <span>
-                <Link
-                  to="/admin-signup"
-                  className="text-[#2a557a] hover:text-blue-400 font-bold text-md"
-                >
-                  Create an account
-                </Link>
-              </span>
-            </p>
-          </div> */}
-        </form>
-        {showAlert && (
-          <div className="fixed top-0 left-0 w-full bg-green-500 text-white p-4 flex justify-between items-center">
-            <p>Login successful. Redirecting to admin dashboard.</p>
-            <button
-              className="text-white hover:text-gray-200 focus:outline-none"
-              onClick={() => setShowAlert(false)}
-            >
-              &times;
-            </button>
-          </div>
-        )}
-        {errorMessage && (
-          <div className="mt-4 bg-red-500 text-white p-3 rounded-lg">
-            {errorMessage}
-          </div>
-        )}
+
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Link 
+                to="/teacher-login"
+                className="text-sm text-[rgba(8,42,88,0.9)] hover:text-blue-500 transition-colors duration-300"
+              >
+                Teacher Login
+              </Link>
+              <span className="hidden sm:block text-gray-300">|</span>
+              <Link 
+                to="/student-login"
+                className="text-sm text-[rgba(8,42,88,0.9)] hover:text-blue-500 transition-colors duration-300"
+              >
+                Student Login
+              </Link>
+            </div>
+
+            <div className="text-center mt-4">
+              <Link 
+                to="/"
+                className="text-sm text-gray-600 hover:text-[rgba(8,42,88,0.9)] transition-colors duration-300 inline-flex items-center"
+              >
+                ← Back to Home
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
+    </div>
     </div>
   );
 };

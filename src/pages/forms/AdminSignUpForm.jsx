@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiAdminSignUp } from '../../services/auth';
 import bg from "../../assets/image/bg5.jpg"
+import SuccessPopup from '../../components/SuccessPopup';
 
 const AdminSignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +16,7 @@ const AdminSignUpForm = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate()
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -72,78 +73,87 @@ return (
           <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">
             First Name
           </label>
+          <div className='bg-[rgba(8,42,88,0.9)]'>
           <input
             type="text"
             id="firstName"
             name="firstName"
             value={formData.firstName}
             onChange={handleInputChange}
-            className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
             placeholder="Enter your first name"
             required
           />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">
             Last Name
           </label>
+          <div className='bg-[rgba(8,42,88,0.9)]'>
           <input
             type="text"
             id="lastName"
             name="lastName"
             value={formData.lastName}
             onChange={handleInputChange}
-            className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
             placeholder="Enter your last name"
             required
           />
+          </div>
         </div>
         {/* Other form fields */}
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
             Email Address
           </label>
+          <div className='bg-[rgba(8,42,88,0.9)]'>
           <input
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
             placeholder="Enter your email address"
             required
           />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="password" className="block text-gray-700 font-bold mb-2">
             Password
           </label>
+          <div className='bg-[rgba(8,42,88,0.9)]'>
           <input
             type="password"
             id="password"
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
             placeholder="Enter a secure password"
             required
           />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="school" className="block text-gray-700 font-bold mb-2">
             School
           </label>
+          <div className='bg-[rgba(8,42,88,0.9)]'>
           <input
             type="text"
             id="school"
             name="school"
             value={formData.school}
             onChange={handleInputChange}
-            className="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
             placeholder="Enter your school name"
             required
           /> 
-          
+          </div>
         </div>
         <div className="flex justify-between ">
           <button
@@ -184,6 +194,8 @@ return (
           </button>
         </div>
       )}
+
+    {showSuccess && <SuccessPopup message="Registration successful! Redirecting to login..." />}
 
   </div>
 );

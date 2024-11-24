@@ -57,7 +57,7 @@ import StudentMessages from './components/StudentMessages';
 // import TeacherGrades from './components/TeacherGrades';
 // import TeacherMaterials from './components/TeacherMateri';
 
-// import AdminOverview from './components/AdminOverview';
+import AdminOverview from './components/AdminOverview';
 // import AdminGradeManagement from './components/AdminGradeManagement';
 // import AdminAttendance from './components/AdminAttendance';
 
@@ -96,6 +96,10 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <AdminDashboard />,
     children: [
+      {
+       index: true,
+        element: <AdminOverview />,
+      },
       {
         path: "register-teacher",
         element: <TeacherRegistrationForm />,

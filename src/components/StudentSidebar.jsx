@@ -74,7 +74,7 @@ const StudentSidebar = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
       sessionStorage.clear();
-      navigate('/student-login');
+      navigate('/');
     }
   };
 

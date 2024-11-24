@@ -65,7 +65,7 @@ const TeacherSidebar = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
       sessionStorage.clear();
-      navigate('/teacher-login');
+      navigate('/');
     }
   };
 

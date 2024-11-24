@@ -20,21 +20,21 @@ const StudentNotifications = () => {
             id: 1,
             type: 'assignment',
             message: 'New assignment posted in Mathematics',
-            date: '2024-02-20',
+            date: '2024-11-20',
             read: false
           },
           {
             id: 2,
             type: 'grade',
             message: 'Your grade for Physics assignment has been posted',
-            date: '2024-02-19',
+            date: '2024-11-19',
             read: true
           },
           {
             id: 3,
             type: 'system',
             message: 'Course schedule updated',
-            date: '2024-02-18',
+            date: '2024-11-18',
             read: false
           }
         ]);

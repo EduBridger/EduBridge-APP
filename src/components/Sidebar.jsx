@@ -66,8 +66,7 @@ const Sidebar = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.clear();
       sessionStorage.clear();
-      delete apiClient.defaults.headers.common['Authorization'];
-      navigate('/admin-login');
+      navigate('/');
     }
   };
 
@@ -161,7 +160,7 @@ const Sidebar = () => {
         </nav>
 
         {/* Logout Button */}
-        <div className="absolute bottom-0 w-full p-6 ">
+        <div className="absolute bottom-0 w-full p-6 border-t border-gray-600">
           <button
             onClick={handleLogout}
             className="w-full px-4 py-2 text-center bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center justify-center gap-2"
