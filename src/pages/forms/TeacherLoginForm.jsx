@@ -75,16 +75,16 @@ const TeacherLoginForm = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FaEnvelopeOpen className="h-5 w-5 text-gray-400" />
                 </div>
-                <div className='bg-[rgba(8,42,88,0.9)]'>
+           
                   <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="rounded-full   w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none mx- sm:text-sm transition-all duration-300"
+                  className="rounded-lg   w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none mx- sm:text-sm transition-all duration-300"
                   placeholder="Enter your email"
-                /></div>
+                />
                 
               </div>
             </div>
@@ -97,16 +97,16 @@ const TeacherLoginForm = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FaLock className="h-5 w-5 text-gray-400" />
                 </div>
-                <div className='bg-[rgba(8,42,88,0.9)]'>
+                
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="rounded-full  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
+                  className="rounded-lg  w-full pl-10 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 outline-none sm:text-sm transition-all duration-300"
                   placeholder="Enter your password"
-                /></div>
+                />
               </div>
             </div>
 
